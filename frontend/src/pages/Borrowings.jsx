@@ -1,9 +1,13 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { FaEye, FaEdit, FaTrash } from 'react-icons/fa'; // Import ikon
 
 function Borrowings() {
     const [borrowings, setBorrowings] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [borrowingsPerPage] = useState(10); // Jumlah peminjaman per halaman
+    const [selectedBorrowing, setSelectedBorrowing] = useState(null); // State untuk modal
 
     useEffect(() => {
         axios.get("http://localhost:5000/borrowings")
@@ -21,16 +25,29 @@ function Borrowings() {
         }
     };
 
+    const handleViewBorrowing = (id) => {
+        const borrowing = borrowings.find(b => b.id === id);
+        setSelectedBorrowing(borrowing);
+    };
+
+    // Pagination logic
+    const indexOfLastBorrowing = currentPage * borrowingsPerPage;
+    const indexOfFirstBorrowing = indexOfLastBorrowing - borrowingsPerPage;
+    const currentBorrowings = borrowings.slice(indexOfFirstBorrowing, indexOfLastBorrowing);
+    const totalPages = Math.ceil(borrowings.length / borrowingsPerPage);
+
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
     return (
         <div className="container mt-4">
             <h1 className="text-center mb-4">Borrowings List</h1>
 
-            <div className="mb-3">
+            <div className="mb-3 text-end">
                 <Link to="/add-borrowing" className="btn btn-primary">Add New Borrowing</Link>
             </div>
 
             <div className="table-responsive">
-                <table className="table table-bordered table-hover">
+                <table className="table table-striped table-bordered table-hover">
                     <thead className="table-dark">
                         <tr>
                             <th>Book ID</th>
@@ -41,21 +58,21 @@ function Borrowings() {
                         </tr>
                     </thead>
                     <tbody>
-                        {borrowings.map(borrowing => (
+                        {currentBorrowings.map(borrowing => (
                             <tr key={borrowing.id}>
                                 <td>{borrowing.book_id}</td>
                                 <td>{borrowing.customer_id}</td>
                                 <td>{borrowing.borrow_date || "Not Available"}</td>
                                 <td>{borrowing.return_date || "Not Available"}</td>
                                 <td>
-                                    <Link to={`/view-borrowing/${borrowing.id}`} className="btn btn-info btn-sm me-2">
-                                        View
-                                    </Link>
+                                    <button className="btn btn-info btn-sm me-2" onClick={() => handleViewBorrowing(borrowing.id)}>
+                                        <FaEye /> View
+                                    </button>
                                     <Link to={`/edit-borrowing/${borrowing.id}`} className="btn btn-warning btn-sm me-2">
-                                        Edit
+                                        <FaEdit /> Edit
                                     </Link>
                                     <button className="btn btn-danger btn-sm" onClick={() => handleDelete(borrowing.id)}>
-                                        Delete
+                                        <FaTrash /> Delete
                                     </button>
                                 </td>
                             </tr>
@@ -63,6 +80,39 @@ function Borrowings() {
                     </tbody>
                 </table>
             </div>
+
+            {/* Pagination */}
+            <nav>
+                <ul className="pagination justify-content-center">
+                    {Array.from({ length: totalPages }, (_, index) => (
+                        <li key={index + 1} className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}>
+                            <button className="page-link" onClick={() => paginate(index + 1)}>
+                                {index + 1}
+                            </button>
+                        </li>
+                    ))}
+                </ul>
+            </nav>
+
+            {/* Modal for showing borrowing details */}
+            {selectedBorrowing && (
+                <div className="modal fade show d-block" style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}>
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title">Borrowing Details</h5>
+                                <button className="btn-close" onClick={() => setSelectedBorrowing(null)}></button>
+                            </div>
+                            <div className="modal-body">
+                                <p><strong>Book ID:</strong> {selectedBorrowing.book_id}</p>
+                                <p><strong>Customer ID:</strong> {selectedBorrowing.customer_id}</p>
+                                <p><strong>Borrow Date:</strong> {selectedBorrowing.borrow_date || "Not Available"}</p>
+                                <p><strong>Return Date:</strong> {selectedBorrowing.return_date || "Not Available"}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

@@ -1,11 +1,14 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";  // Import useNavigate from react-router-dom
+import { useNavigate } from "react-router-dom";  
 import axios from "axios";
+import { FaEye, FaEdit, FaTrash } from 'react-icons/fa'; 
 
 function BookList() {
   const [books, setBooks] = useState([]);
   const [selectedBook, setSelectedBook] = useState(null);
-  const navigate = useNavigate();  // Initialize useNavigate
+  const [currentPage, setCurrentPage] = useState(1);
+  const [booksPerPage] = useState(10); 
+  const navigate = useNavigate();  
 
   useEffect(() => {
     axios.get("http://localhost:5000/books")
@@ -20,23 +23,37 @@ function BookList() {
   };
 
   const handleDelete = (id) => {
-    axios.delete(`http://localhost:5000/books/${id}`)
-      .then(() => {
-        setBooks(books.filter((book) => book.id !== id));
-      })
-      .catch((err) => console.error(err));
+    if (window.confirm("Are you sure you want to delete this book?")) {
+      axios.delete(`http://localhost:5000/books/${id}`)
+        .then(() => {
+          setBooks(books.filter((book) => book.id !== id));
+        })
+        .catch((err) => console.error(err));
+    }
   };
 
   const handleEdit = (id) => {
-    // Navigate to the edit page with the book ID
     navigate(`/edit-book/${id}`);
   };
+
+  // Pagination logic
+  const indexOfLastBook = currentPage * booksPerPage;
+  const indexOfFirstBook = indexOfLastBook - booksPerPage;
+  const currentBooks = books.slice(indexOfFirstBook, indexOfLastBook);
+  const totalPages = Math.ceil(books.length / booksPerPage);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
     <div className="container mt-4">
       <h1 className="text-center mb-4">Book List</h1>
-      <table className="table">
-        <thead>
+
+      <div className="mb-3 text-end">
+        <button className="btn btn-primary" onClick={() => navigate('/add-book')}>Add New Book</button>
+      </div>
+
+      <table className="table table-striped table-bordered">
+        <thead className="table-dark">
           <tr>
             <th>ID</th>
             <th>Title</th>
@@ -46,21 +63,40 @@ function BookList() {
           </tr>
         </thead>
         <tbody>
-          {books.map((book) => (
+          {currentBooks.map((book) => (
             <tr key={book.id}>
               <td>{book.id}</td>
               <td>{book.title}</td>
               <td>{book.author}</td>
               <td>{book.stock}</td>
               <td>
-                <button className="btn btn-info" onClick={() => handleView(book.id)}>View</button>
-                <button className="btn btn-warning ms-2" onClick={() => handleEdit(book.id)}>Edit</button>
-                <button className="btn btn-danger ms-2" onClick={() => handleDelete(book.id)}>Delete</button>
+                <button className="btn btn-info" onClick={() => handleView(book.id)}>
+                  <FaEye /> View
+                </button>
+                <button className="btn btn-warning ms-2" onClick={() => handleEdit(book.id)}>
+                  <FaEdit /> Edit
+                </button>
+                <button className="btn btn-danger ms-2" onClick={() => handleDelete(book.id)}>
+                  <FaTrash /> Delete
+                </button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+
+      {/* Pagination */}
+      <nav>
+        <ul className="pagination justify-content-center">
+          {Array.from({ length: totalPages }, (_, index) => (
+            <li key={index + 1} className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}>
+              <button className="page-link" onClick={() => paginate(index + 1)}>
+                {index + 1}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </nav>
 
       {/* Modal for showing book details */}
       {selectedBook && (
@@ -76,9 +112,6 @@ function BookList() {
                 <p><strong>Title:</strong> {selectedBook.title}</p>
                 <p><strong>Author:</strong> {selectedBook.author}</p>
                 <p><strong>Stock:</strong> {selectedBook.stock}</p>
-              </div>
-              <div className="modal-footer">
-                <button className="btn btn-secondary" onClick={() => setSelectedBook(null)}>Close</button>
               </div>
             </div>
           </div>
