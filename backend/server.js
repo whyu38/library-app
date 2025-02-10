@@ -59,7 +59,7 @@ app.get('/search/customers', (req, res) => {
 // Endpoint untuk pencarian peminjaman
 app.get('/search/borrowings', (req, res) => {
   const searchQuery = req.query.query;
-  const sql = `SELECT * FROM borrowings WHERE borrowing_info LIKE ?`;
+  const sql = `SELECT * FROM borrowings WHERE borrow_code LIKE ?`;
   db.query(sql, [`%${searchQuery}%`], (err, results) => {
     if (err) {
       return res.status(500).send('Error searching borrowings');

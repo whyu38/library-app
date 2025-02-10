@@ -7,32 +7,56 @@ function AddBorrowing() {
     const [bookId, setBookId] = useState("");
     const [borrowDate, setBorrowDate] = useState("");
     const [returnDate, setReturnDate] = useState("");
+    const [borrowCode, setBorrowCode] = useState(""); // Add state for borrow_code
     const navigate = useNavigate(); 
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
+        // Check if return date is after borrow date
         if (new Date(returnDate) < new Date(borrowDate)) {
             alert("Return Date must be after Borrow Date");
             return;
         }
 
-        axios.post("http://localhost:5000/borrowings", { 
+        // Prepare the payload
+        const borrowingData = { 
             customer_id: customerId, 
             book_id: bookId, 
             borrow_date: borrowDate, 
-            return_date: returnDate 
-        })
-        .then(() => {
-            navigate("/borrowings"); 
-        })
-        .catch(err => console.log(err));
+            return_date: returnDate,
+            borrow_code: borrowCode // Include borrow_code in the payload
+        };
+
+        // Send the POST request
+        axios.post("http://localhost:5000/borrowings", borrowingData)
+            .then((response) => {
+                if (response.status === 201) {
+                    navigate("/borrowings"); // Redirect after successful creation
+                } else {
+                    alert("Error adding borrowing");
+                }
+            })
+            .catch((err) => {
+                console.error("Error:", err);
+                alert("There was an issue with the request.");
+            });
     };
 
     return (
         <div className="container mt-4">
             <h1>Add New Borrowing</h1>
             <form onSubmit={handleSubmit}>
+                <div className="mb-3">
+                    <label className="form-label">Borrow Code</label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        value={borrowCode}
+                        onChange={(e) => setBorrowCode(e.target.value)} // Handle borrow_code change
+                        required
+                    />
+                </div>
                 <div className="mb-3">
                     <label className="form-label">Customer ID</label>
                     <input

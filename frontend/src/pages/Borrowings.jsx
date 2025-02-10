@@ -50,6 +50,7 @@ function Borrowings() {
                 <table className="table table-striped table-bordered table-hover">
                     <thead className="table-dark">
                         <tr>
+                            <th>Borrow Code</th>
                             <th>Book ID</th>
                             <th>Customer ID</th>
                             <th>Borrow Date</th>
@@ -60,6 +61,7 @@ function Borrowings() {
                     <tbody>
                         {currentBorrowings.map(borrowing => (
                             <tr key={borrowing.id}>
+                                <td>{borrowing.borrow_code}</td> {/* Menambahkan borrow_code */}
                                 <td>{borrowing.book_id}</td>
                                 <td>{borrowing.customer_id}</td>
                                 <td>{borrowing.borrow_date || "Not Available"}</td>
@@ -104,6 +106,7 @@ function Borrowings() {
                                 <button className="btn-close" onClick={() => setSelectedBorrowing(null)}></button>
                             </div>
                             <div className="modal-body">
+                                <p><strong>Borrow Code:</strong> {selectedBorrowing.borrow_code}</p> {/* Menambahkan borrow_code */}
                                 <p><strong>Book ID:</strong> {selectedBorrowing.book_id}</p>
                                 <p><strong>Customer ID:</strong> {selectedBorrowing.customer_id}</p>
                                 <p><strong>Borrow Date:</strong> {selectedBorrowing.borrow_date || "Not Available"}</p>

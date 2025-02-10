@@ -16,13 +16,46 @@ function AddCustomer() {
     };
 
     return (
-        <div className="container mt-4">
-            <h2>Add New Customer</h2>
+        <div className="container mt-5">
+            <h2 className="text-center mb-4">Add New Customer</h2>
             <form onSubmit={handleSubmit}>
-                <input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} required />
-                <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-                <input type="text" placeholder="Phone" value={phone} onChange={(e) => setPhone(e.target.value)} required />
-                <button type="submit">Add Customer</button>
+                <div className="mb-3">
+                    <label htmlFor="name" className="form-label">Name</label>
+                    <input
+                        type="text"
+                        id="name"
+                        className="form-control"
+                        placeholder="Enter customer name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        required
+                    />
+                </div>
+                <div className="mb-3">
+                    <label htmlFor="email" className="form-label">Email</label>
+                    <input
+                        type="email"
+                        id="email"
+                        className="form-control"
+                        placeholder="Enter customer email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                    />
+                </div>
+                <div className="mb-3">
+                    <label htmlFor="phone" className="form-label">Phone</label>
+                    <input
+                        type="text"
+                        id="phone"
+                        className="form-control"
+                        placeholder="Enter customer phone"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        required
+                    />
+                </div>
+                <button type="submit" className="btn btn-primary">Add Customer</button>
             </form>
         </div>
     );
