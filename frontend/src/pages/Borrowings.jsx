@@ -1,13 +1,12 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { FaEye, FaEdit, FaTrash } from 'react-icons/fa'; // Import ikon
-
+import { FaEye, FaEdit, FaTrash } from 'react-icons/fa';
 function Borrowings() {
     const [borrowings, setBorrowings] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [borrowingsPerPage] = useState(10); // Jumlah peminjaman per halaman
-    const [selectedBorrowing, setSelectedBorrowing] = useState(null); // State untuk modal
+    const [borrowingsPerPage] = useState(10); 
+    const [selectedBorrowing, setSelectedBorrowing] = useState(null);
 
     useEffect(() => {
         axios.get("http://localhost:5000/borrowings")

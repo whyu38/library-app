@@ -48,9 +48,9 @@ router.post("/", (req, res) => {
   );
 });
 
-// Update borrowing (only borrow_code can be updated)
+// Update borrowing 
 router.put("/:id", (req, res) => {
-  const { borrow_code } = req.body; // Only borrow_code is allowed to be updated
+  const { borrow_code } = req.body; 
   const borrowingId = req.params.id;
 
   if (!borrow_code) {

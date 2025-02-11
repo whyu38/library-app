@@ -20,7 +20,7 @@ router.get("/:id", (req, res) => {
       if (results.length === 0) {
         return res.status(404).json({ error: "Customer not found" });
       }
-      res.json(results[0]); // Mengembalikan hanya satu customer
+      res.json(results[0]); 
     });
   });  
 

@@ -7,7 +7,7 @@ function AddBorrowing() {
     const [bookId, setBookId] = useState("");
     const [borrowDate, setBorrowDate] = useState("");
     const [returnDate, setReturnDate] = useState("");
-    const [borrowCode, setBorrowCode] = useState(""); // Add state for borrow_code
+    const [borrowCode, setBorrowCode] = useState(""); 
     const navigate = useNavigate(); 
 
     const handleSubmit = (e) => {
@@ -25,14 +25,14 @@ function AddBorrowing() {
             book_id: bookId, 
             borrow_date: borrowDate, 
             return_date: returnDate,
-            borrow_code: borrowCode // Include borrow_code in the payload
+            borrow_code: borrowCode 
         };
 
         // Send the POST request
         axios.post("http://localhost:5000/borrowings", borrowingData)
             .then((response) => {
                 if (response.status === 201) {
-                    navigate("/borrowings"); // Redirect after successful creation
+                    navigate("/borrowings"); 
                 } else {
                     alert("Error adding borrowing");
                 }
@@ -53,7 +53,7 @@ function AddBorrowing() {
                         type="text"
                         className="form-control"
                         value={borrowCode}
-                        onChange={(e) => setBorrowCode(e.target.value)} // Handle borrow_code change
+                        onChange={(e) => setBorrowCode(e.target.value)} 
                         required
                     />
                 </div>

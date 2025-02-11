@@ -1,5 +1,5 @@
 const express = require("express");
-const cors = require("cors"); // Menambahkan middleware CORS
+const cors = require("cors"); 
 const app = express();
 const mysql = require("mysql2");
 
@@ -22,10 +22,10 @@ const customersRouter = require("./routes/customers");
 const borrowingsRouter = require("./routes/borrowings");
 
 // Middleware untuk parsing body JSON
-app.use(express.json()); // Gunakan express.json() untuk parsing JSON body
+app.use(express.json()); 
 
-// Middleware CORS untuk memungkinkan permintaan dari frontend yang berjalan di port berbeda
-app.use(cors()); // Mengizinkan CORS
+// Untuk memungkinkan permintaan dari frontend yang berjalan di port berbeda
+app.use(cors()); 
 
 // Gunakan rute untuk buku, pelanggan, dan peminjaman
 app.use("/books", booksRouter);

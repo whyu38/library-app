@@ -34,17 +34,16 @@ function EditBorrowing() {
   const handleChange = (e) => {
     setBorrowing((prev) => ({
       ...prev,
-      borrowCode: e.target.value, // Hanya memperbarui borrowCode
+      borrowCode: e.target.value, 
     }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Kirim data ke server, hanya `borrow_code` yang dikirim
     axios
       .put(`http://localhost:5000/borrowings/${id}`, {
-        borrow_code: borrowing.borrowCode, // Hanya update borrow_code
+        borrow_code: borrowing.borrowCode, 
       })
       .then(() => navigate("/borrowings"))
       .catch((err) => console.log(err));
@@ -61,7 +60,7 @@ function EditBorrowing() {
             id="borrowCode"
             name="borrowCode"
             value={borrowing.borrowCode}
-            onChange={handleChange} // Bisa diedit
+            onChange={handleChange} 
             className="form-control"
           />
         </div>
@@ -73,7 +72,7 @@ function EditBorrowing() {
             name="bookId"
             value={borrowing.bookId}
             className="form-control"
-            disabled // Tidak bisa diedit
+            disabled 
           />
         </div>
         <div className="mb-3">
@@ -84,7 +83,7 @@ function EditBorrowing() {
             name="customerId"
             value={borrowing.customerId}
             className="form-control"
-            disabled // Tidak bisa diedit
+            disabled 
           />
         </div>
         <div className="mb-3">
@@ -95,7 +94,7 @@ function EditBorrowing() {
             name="borrowDate"
             value={borrowing.borrowDate}
             className="form-control"
-            disabled // Tidak bisa diedit
+            disabled 
           />
         </div>
         <div className="mb-3">
@@ -106,7 +105,7 @@ function EditBorrowing() {
             name="returnDate"
             value={borrowing.returnDate}
             className="form-control"
-            disabled // Tidak bisa diedit
+            disabled 
           />
         </div>
         <button type="submit" className="btn btn-primary">Save Changes</button>
